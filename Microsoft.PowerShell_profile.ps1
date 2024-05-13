@@ -23,7 +23,7 @@ function Update-Profile {
     }
 
     try {
-        $url = "https://raw.githubusercontent.com/ChrisTitusTech/powershell-profile/main/Microsoft.PowerShell_profile.ps1"
+        $url = "https://raw.githubusercontent.com/mrehanabbasi/powershell-profile/main/Microsoft.PowerShell_profile.ps1"
         $oldhash = Get-FileHash $PROFILE
         Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
         $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
@@ -31,9 +31,11 @@ function Update-Profile {
             Copy-Item -Path "$env:temp/Microsoft.PowerShell_profile.ps1" -Destination $PROFILE -Force
             Write-Host "Profile has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
         }
-    } catch {
+    }
+    catch {
         Write-Error "Unable to check for `$profile updates"
-    } finally {
+    }
+    finally {
         Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
     }
 }
@@ -60,10 +62,12 @@ function Update-PowerShell {
             Write-Host "Updating PowerShell..." -ForegroundColor Yellow
             winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
             Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
-        } else {
+        }
+        else {
             Write-Host "Your PowerShell is up to date." -ForegroundColor Green
         }
-    } catch {
+    }
+    catch {
         Write-Error "Failed to update PowerShell. Error: $_"
     }
 }
@@ -87,13 +91,13 @@ function Test-CommandExists {
 
 # Editor Configuration
 $EDITOR = if (Test-CommandExists nvim) { 'nvim' }
-          elseif (Test-CommandExists pvim) { 'pvim' }
-          elseif (Test-CommandExists vim) { 'vim' }
-          elseif (Test-CommandExists vi) { 'vi' }
-          elseif (Test-CommandExists code) { 'code' }
-          elseif (Test-CommandExists notepad++) { 'notepad++' }
-          elseif (Test-CommandExists sublime_text) { 'sublime_text' }
-          else { 'notepad' }
+elseif (Test-CommandExists pvim) { 'pvim' }
+elseif (Test-CommandExists vim) { 'vim' }
+elseif (Test-CommandExists vi) { 'vi' }
+elseif (Test-CommandExists code) { 'code' }
+elseif (Test-CommandExists notepad++) { 'notepad++' }
+elseif (Test-CommandExists sublime_text) { 'sublime_text' }
+else { 'notepad' }
 Set-Alias -Name vim -Value $EDITOR
 
 function Edit-Profile {
@@ -112,8 +116,9 @@ function Get-PubIP { (Invoke-WebRequest http://ifconfig.me/ip).Content }
 # System Utilities
 function uptime {
     if ($PSVersionTable.PSVersion.Major -eq 5) {
-        Get-WmiObject win32_operatingsystem | Select-Object @{Name='LastBootUpTime'; Expression={$_.ConverttoDateTime($_.lastbootuptime)}} | Format-Table -HideTableHeaders
-    } else {
+        Get-WmiObject win32_operatingsystem | Select-Object @{Name = 'LastBootUpTime'; Expression = { $_.ConverttoDateTime($_.lastbootuptime) } } | Format-Table -HideTableHeaders
+    }
+    else {
         net statistics workstation | Select-String "since" | ForEach-Object { $_.ToString().Replace('Statistics since ', '') }
     }
 }
@@ -127,31 +132,33 @@ function unzip ($file) {
     $fullFile = Get-ChildItem -Path $pwd -Filter $file | ForEach-Object { $_.FullName }
     Expand-Archive -Path $fullFile -DestinationPath $pwd
 }
-function hb {
-    if ($args.Length -eq 0) {
-        Write-Error "No file path specified."
-        return
-    }
-    
-    $FilePath = $args[0]
-    
-    if (Test-Path $FilePath) {
-        $Content = Get-Content $FilePath -Raw
-    } else {
-        Write-Error "File path does not exist."
-        return
-    }
-    
-    $uri = "http://bin.christitus.com/documents"
-    try {
-        $response = Invoke-RestMethod -Uri $uri -Method Post -Body $Content -ErrorAction Stop
-        $hasteKey = $response.key
-        $url = "http://bin.christitus.com/$hasteKey"
-        Write-Output $url
-    } catch {
-        Write-Error "Failed to upload the document. Error: $_"
-    }
-}
+# function hb {
+#     if ($args.Length -eq 0) {
+#         Write-Error "No file path specified."
+#         return
+#     }
+
+#     $FilePath = $args[0]
+
+#     if (Test-Path $FilePath) {
+#         $Content = Get-Content $FilePath -Raw
+#     }
+#     else {
+#         Write-Error "File path does not exist."
+#         return
+#     }
+
+#     $uri = "http://bin.christitus.com/documents"
+#     try {
+#         $response = Invoke-RestMethod -Uri $uri -Method Post -Body $Content -ErrorAction Stop
+#         $hasteKey = $response.key
+#         $url = "http://bin.christitus.com/$hasteKey"
+#         Write-Output $url
+#     }
+#     catch {
+#         Write-Error "Failed to upload the document. Error: $_"
+#     }
+# }
 function grep($regex, $dir) {
     if ( $dir ) {
         Get-ChildItem $dir | select-string $regex
@@ -185,13 +192,13 @@ function pgrep($name) {
 }
 
 function head {
-  param($Path, $n = 10)
-  Get-Content $Path -Head $n
+    param($Path, $n = 10)
+    Get-Content $Path -Head $n
 }
 
 function tail {
-  param($Path, $n = 10)
-  Get-Content $Path -Tail $n
+    param($Path, $n = 10)
+    Get-Content $Path -Tail $n
 }
 
 # Quick File Creation
@@ -218,25 +225,25 @@ function la { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
 function ll { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
 
 # Git Shortcuts
-function gs { git status }
+# function gs { git status }
 
-function ga { git add . }
+# function ga { git add . }
 
-function gc { param($m) git commit -m "$m" }
+# function gc { param($m) git commit -m "$m" }
 
-function gp { git push }
+# function gp { git push }
 
-function g { z Github }
+# function g { z Github }
 
-function gcom {
-    git add .
-    git commit -m "$args"
-}
-function lazyg {
-    git add .
-    git commit -m "$args"
-    git push
-}
+# function gcom {
+#     git add .
+#     git commit -m "$args"
+# }
+# function lazyg {
+#     git add .
+#     git commit -m "$args"
+#     git push
+# }
 
 # Quick Access to System Information
 function sysinfo { Get-ComputerInfo }
@@ -251,22 +258,35 @@ function pst { Get-Clipboard }
 
 # Enhanced PowerShell Experience
 Set-PSReadLineOption -Colors @{
-    Command = 'Yellow'
+    Command   = 'Yellow'
     Parameter = 'Green'
-    String = 'DarkCyan'
+    String    = 'DarkCyan'
 }
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -EditMode Windows
 
 ## Final Line to set prompt
-oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
+oh-my-posh init pwsh --config https://gist.githubusercontent.com/mrehanabbasi/44d1d5b30ba8bbad2475c923ab2a2e82/raw/10b11b3a00b49dbf03157830283e4e468a35af9a/oh-my-posh_theme.json | Invoke-Expression
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
-} else {
+}
+else {
     Write-Host "zoxide command not found. Attempting to install via winget..."
     try {
         winget install -e --id ajeetdsouza.zoxide
         Write-Host "zoxide installed successfully. Initializing..."
         Invoke-Expression (& { (zoxide init powershell | Out-String) })
-    } catch {
+    }
+    catch {
         Write-Error "Failed to install zoxide. Error: $_"
     }
+}
+
+# kubectl aliases
+# . "$(Split-Path -Path $PROFILE)\kubectl_aliases.ps1"
+try {
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/shanoor/kubectl-aliases-powershell/master/kubectl_aliases.ps1'))
+}
+catch {
+    Write-Warning "Failed to load kubectl aliases"
 }
