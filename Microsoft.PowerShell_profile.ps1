@@ -210,9 +210,9 @@ function mkcd { param($dir) mkdir $dir -Force; Set-Location $dir }
 ### Quality of Life Aliases
 
 # Navigation Shortcuts
-function docs { Set-Location -Path $HOME\Documents }
+function docs { Set-Location -Path $HOME\OneDrive\Documents }
 
-function dtop { Set-Location -Path $HOME\Desktop }
+function dtop { Set-Location -Path $HOME\OneDrive\Desktop }
 
 # Quick Access to Editing the Profile
 function ep { vim $PROFILE }
@@ -266,7 +266,11 @@ Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -EditMode Windows
 
 ## Final Line to set prompt
-oh-my-posh init pwsh --config https://gist.githubusercontent.com/mrehanabbasi/44d1d5b30ba8bbad2475c923ab2a2e82/raw/10b11b3a00b49dbf03157830283e4e468a35af9a/oh-my-posh_theme.json | Invoke-Expression
+$ohMyPostConfig = "https://gist.githubusercontent.com/mrehanabbasi/44d1d5b30ba8bbad2475c923ab2a2e82/raw/10b11b3a00b49dbf03157830283e4e468a35af9a/oh-my-posh_theme.json"
+if (-not $global:canConnectToGitHub) {
+    $ohMyPostConfig = "$HOME\oh-my-posh_theme.json"
+}
+oh-my-posh init pwsh --config $ohMyPostConfig | Invoke-Expression
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
 }
