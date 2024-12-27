@@ -266,20 +266,21 @@ Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -EditMode Windows
 
 ## Final Line to set prompt
-$ohMyPostConfig = "https://gist.githubusercontent.com/mrehanabbasi/44d1d5b30ba8bbad2475c923ab2a2e82/raw/10b11b3a00b49dbf03157830283e4e468a35af9a/oh-my-posh_theme.json"
+# $ohMyPoshConfig = "https://gist.githubusercontent.com/mrehanabbasi/44d1d5b30ba8bbad2475c923ab2a2e82/raw/10b11b3a00b49dbf03157830283e4e468a35af9a/oh-my-posh_theme.json"
+$ohMyPoshConfig = "https://raw.githubusercontent.com/mrehanabbasi/omp-prompt/refs/heads/main/prompt.yaml"
 if (-not $global:canConnectToGitHub) {
-    $ohMyPostConfig = "$HOME\oh-my-posh_theme.json"
+    $ohMyPoshConfig = "$HOME\oh-my-posh_theme.json"
 }
-oh-my-posh init pwsh --config $ohMyPostConfig | Invoke-Expression
+oh-my-posh init pwsh --config $ohMyPoshConfig | Invoke-Expression
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Invoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })
 }
 else {
     Write-Host "zoxide command not found. Attempting to install via winget..."
     try {
         winget install -e --id ajeetdsouza.zoxide
         Write-Host "zoxide installed successfully. Initializing..."
-        Invoke-Expression (& { (zoxide init powershell | Out-String) })
+        Invoke-Expression (& { (zoxide init --cmd cd powershell | Out-String) })
     }
     catch {
         Write-Error "Failed to install zoxide. Error: $_"
