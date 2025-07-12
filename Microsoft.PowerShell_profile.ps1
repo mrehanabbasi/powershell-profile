@@ -295,3 +295,7 @@ try {
 catch {
     Write-Warning "Failed to load kubectl aliases"
 }
+
+# Docker alias for podman
+Set-Alias -Name docker -Value podman
+
