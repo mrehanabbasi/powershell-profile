@@ -297,5 +297,4 @@ catch {
 }
 
 # Docker alias for podman
-Set-Alias -Name docker -Value podman
-
+# Set-Alias -Name docker -Value podman
