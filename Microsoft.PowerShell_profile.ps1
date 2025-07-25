@@ -298,14 +298,3 @@ catch {
 
 # Docker alias for podman
 # Set-Alias -Name docker -Value podman
-
-# Load the version-bump script as a function
-function Invoke-GenVersion {
-  param(
-    [string]$Generate = 'false',
-    [switch]$PreventRemoveFile
-  )
-  $scriptPath = 'C:\path\to\Generate-Version.ps1'
-  & $scriptPath $Generate ($PreventRemoveFile.IsPresent ? 'true' : '')
-}
-Set-Alias -Name genver Invoke-GenVersion -Scope Global
