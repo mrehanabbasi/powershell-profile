@@ -305,7 +305,7 @@ function Invoke-GenVersion {
     [string]$Generate = 'false',
     [switch]$PreventRemoveFile
   )
-  $scriptPath = 'C:\path\to\Generate-Version.ps1'
+  $scriptPath = '.\generateVersion.ps1'
   & $scriptPath $Generate ($PreventRemoveFile.IsPresent ? 'true' : '')
 }
 Set-Alias -Name genver Invoke-GenVersion -Scope Global
